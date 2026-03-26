@@ -3,6 +3,7 @@
 #include <vector>
 
 int main() {
+    //Movie 클래스
     std::vector<Movie> movies;
 
     movies.emplace_back(Movie(1, "Inception",    "Sci-Fi",   2010));
@@ -35,6 +36,7 @@ int main() {
 
     std::cout << std::endl;
     
+    //Rating 클래스
     std::vector<Rating> ratings;
     
     ratings.emplace_back(1, 1, 5);
@@ -56,6 +58,7 @@ int main() {
 
     std::cout << std::endl;
 
+    //User 클래스
     std::vector<User> users;
 
     users.emplace_back(1, "juwon", "juwonhs0913@naver.com");

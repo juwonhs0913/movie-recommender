@@ -7,33 +7,33 @@ private:
     std::string title;
     std::string genre;
     int         releaseYear;
-    double      totalRating;    // averageRating 제거
-    int         ratingCount;    // 추가
+    double      totalRating;    
+    int         ratingCount;    
 
 public:
-    Movie();                    // 기본 생성자 추가
+    Movie();                    
     Movie(int id, const std::string& title,
           const std::string& genre, int year);
 
     int         getId()              const;
     std::string getTitle()           const;
     std::string getGenre()           const;
-    int         getReleaseYear()     const;  // getYear → getReleaseYear
-    double      getAverageRating()   const;  // getRating → getAverageRating
-    int         getRatingCount()     const;  // 추가
+    int         getReleaseYear()     const;  
+    double      getAverageRating()   const;  
+    int         getRatingCount()     const;  
 
-    void addRating(double r);               // 추가
+    void addRating(double r);              
     void display()               const;
 };
 
 class User {
 private:
-    int         id;     //사용자 ID
-    std::string name;   //이름
-    std::string email;  //이메일
+    int         id;     
+    std::string name;   
+    std::string email;  
 
 public:
-    User(); //기본 생성자
+    User(); 
     User(int id, const std::string& name,
         const std::string& email);
     
@@ -46,9 +46,9 @@ public:
 
 class Rating {
 private:
-    int    userId;    // 평가한 사용자
-    int    movieId;   // 평가 대상 영화
-    double score;     // 0.0 ~ 5.0
+    int    userId;    
+    int    movieId;  
+    double score;     
 
 public:
     Rating(int userid, int movieid, double s);

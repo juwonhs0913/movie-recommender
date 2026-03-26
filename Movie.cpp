@@ -18,17 +18,17 @@ int         Movie::getReleaseYear() const { return releaseYear; }
 int         Movie::getRatingCount() const { return ratingCount; }
 
 double Movie::getAverageRating() const {
-    if (ratingCount == 0) return 0.0;  // 0 나눗셈 방어
+    if (ratingCount == 0) return 0.0; 
     return totalRating / ratingCount;
 }
 
 void Movie::addRating(double r) {
-    if (r < 0.0 || r > 5.0) return;   // 유효성 검사
+    if (r < 0.0 || r > 5.0) return;  
     totalRating += r;
     ratingCount++;
 }
 
-void Movie::display() const {          // const 추가
+void Movie::display() const {         
     std::cout << id << ". " << title
               << " (" << releaseYear << ")"
               << "  평점: " << getAverageRating()
