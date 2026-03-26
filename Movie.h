@@ -53,9 +53,9 @@ private:
 public:
     Rating(int userid, int movieid, double s);
 
-    int getuserId() const;
-    int getmovieId() const;
-    double getscore() const;
+    int getUserId() const;
+    int getMovieId() const;
+    double getScore() const;
 
     void display() const;
     // TODO: 생성자 (score 유효성 검사 포함)

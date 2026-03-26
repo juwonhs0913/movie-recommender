@@ -46,9 +46,9 @@ int main() {
     //Rating r1(1, 1, 5);
     //Rating r2(2, 1, 9.8); // 오류 출력 -> 0.0
 
-    std::cout << "USERID: " << ratings[0].getuserId() << ", MOVIE ID: "
-                << ratings[0].getmovieId() << ", 평점: "
-                << ratings[0].getscore() <<std::endl; 
+    std::cout << "USERID: " << ratings[0].getUserId() << ", MOVIE ID: "
+                << ratings[0].getMovieId() << ", 평점: "
+                << ratings[0].getScore() <<std::endl; 
 
     for (const Rating& r : ratings) {
         r.display();    

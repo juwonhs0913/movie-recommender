@@ -9,9 +9,9 @@ Rating::Rating(int userid, int movieid, double s)
         }
     }
 
-int Rating::getuserId() const {return userId; }
-int Rating::getmovieId() const {return movieId; }
-double Rating::getscore() const {return score; }
+int Rating::getUserId() const {return userId; }
+int Rating::getMovieId() const {return movieId; }
+double Rating::getScore() const {return score; }
 
 void Rating::display() const {
     std::cout << "USERID: " << userId << ", MOVIE ID: " << movieId << ", 평점: " << score << std::endl;
