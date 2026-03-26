@@ -1,12 +1,10 @@
 #include "Movie.h"
 #include <iostream>
 
-// 기본 생성자
 Movie::Movie()
     : id(0), releaseYear(0),
       totalRating(0.0), ratingCount(0) {}
 
-// 4인자 생성자
 Movie::Movie(int id, const std::string& title,
              const std::string& genre, int year)
     : id(id), title(title), genre(genre),
