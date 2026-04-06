@@ -28,6 +28,8 @@ int main() {
               << movies[0].getRatingCount() << "건)"
               << std::endl;
 
+    //movies[0].setReleaseYear(1088);
+
     for (const Movie& m : movies) {
         m.display();    
     }
