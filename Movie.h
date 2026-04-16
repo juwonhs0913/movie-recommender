@@ -24,7 +24,11 @@ public:
 
     void setReleaseYear(int year);
     void addRating(double r);              
-    void display()               const;
+    void display() const;
+
+    bool operator==(const std::string& targetTitle) const; 
+    bool operator<(const Movie& other) const;              
+    friend std::ostream& operator<<(std::ostream& os, const Movie& m);
 };
 
 class User {

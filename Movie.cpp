@@ -42,3 +42,18 @@ void Movie::display() const {
               << " (" << ratingCount << "건)"
               << std::endl;
 }
+
+// 연산자 오버로딩 구현
+bool Movie::operator==(const std::string& targetTitle) const {
+    return title == targetTitle;
+}
+
+bool Movie::operator<(const Movie& other) const {
+    return getAverageRating() < other.getAverageRating(); 
+}
+
+std::ostream& operator<<(std::ostream& os, const Movie& m) {
+    os << m.id << ". " << m.title << " (" << m.releaseYear << ") 평점: " 
+       << m.getAverageRating() << " (" << m.ratingCount << "건)";
+    return os;
+}
