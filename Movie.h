@@ -22,7 +22,6 @@ public:
     double      getAverageRating()   const;  
     int         getRatingCount()     const;  
 
-    void setReleaseYear(int year);
     void addRating(double r);              
     void display() const;
 
