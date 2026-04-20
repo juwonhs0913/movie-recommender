@@ -1,6 +1,8 @@
 #include "Manager.h"
 #include <iostream>
 
+UserManager::UserManager() {}
+
 void UserManager::addUser() {
     std::string name, email;
     std::cout << "사용자 이름: ";
@@ -12,14 +14,16 @@ void UserManager::addUser() {
     std::cout << "사용자가 추가되었습니다. (ID: " << currentUserId++ << ")\n";
 }
 
-void UserManager::printAllUsers() const {
-    if (users.empty()) { std::cout << "등록된 사용자가 없습니다.\n"; return; }
-    for (const auto& user : users) user.display();
+void UserManager::printAllUsers() {
+    if (users.empty()) {
+        std::cout << "등록된 사용자가 없습니다.\n";
+        return;
+    }
+    for (const User& u : users) std::cout << u << "\n";
 }
 
-bool UserManager::isExistingUser(int id) const {
-    for (const auto& user : users) {
-        if (user.getId() == id) return true;
-    }
+bool UserManager::isExistingUser(int userId) {
+    for (const User& u : users)
+        if (u.getId() == userId) return true;
     return false;
 }
