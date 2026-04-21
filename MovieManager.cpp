@@ -1,7 +1,8 @@
 #include "Manager.h"
-#include "Movie.h"
 #include <iostream>
 #include <algorithm>
+
+MovieManager::MovieManager() {}
 
 void MovieManager::addMovie() {
     std::string title, genre;
@@ -24,25 +25,87 @@ void MovieManager::addMovie() {
 }
 
 void MovieManager::findByTitle() {
+    std::string title;
+    bool found = false;
 
+    std::cout << "찾을 영화를 입력하세요: ";
+    std::getline(std::cin, title);
+
+    for (const Movie& m : movies) {
+        if (m.getTitle().find(title) != std::string::npos) {
+            std::cout << m << "\n";
+            found = true;
+        }
+    }
+    if (!found) std::cout << "검색 결과가 없습니다.\n";
 }
 
 void MovieManager::printAllMovies() {
-    
+    if (movies.empty()) {
+        std::cout << "등록된 영화가 없습니다.\n";
+        return;
+    }
+    for (const Movie& m : movies) std::cout << m << "\n";
+    std::cout << "총 " << movies.size() << "편\n";
 }
 
 void MovieManager::sortByRating() {
+    if (movies.empty()) {
+        std::cout << "등록된 영화가 없습니다.\n";
+        return;
+    }
+    std::vector<Movie> sorted = movies;
+    std::sort(sorted.begin(), sorted.end());
+    for (const Movie& m : sorted) std::cout << m << "\n";
+}
 
+bool MovieManager::isExistingMovie(int movieId) {
+    for (const Movie& m : movies)
+        if (m.getId() == movieId) return true;
+    return false;
 }
 
 void MovieManager::addRating() {
+    int movieId;
+    double score;
 
+    std::cout << "영화 ID를 입력하세요: ";
+    std::cin >> movieId;
+
+    if (!isExistingMovie(movieId)) {
+        std::cout << "존재하지 않는 영화입니다.\n";
+        return;
+    }
+
+    std::cout << "평점을 입력하세요: ";
+    std::cin >> score;
+
+    if (score < 0.0 || score > 5.0) {
+        std::cout << "평점은 0.0~5.0 사이여야 합니다.\n";
+        return;
+    }
+    for (Movie& m : movies) {
+        if (m.getId() == movieId) {
+            m.addRating(score);
+            std::cout << "평점이 등록되었습니다.\n";
+            return;
+        }
+    }
 }
 
 void MovieManager::ratingByMovie() {
+    int movieId;
+    std::cout << "영화의 ID를 입력하세요: ";
+    std::cin >> movieId;
 
-}
-
-bool MovieManager::isExistingMovie(int id) {
-
+    if (!isExistingMovie(movieId)) {
+        std::cout << "존재하지 않는 영화 ID입니다.\n";
+        return;
+    }
+    for (const Movie& m : movies) {
+        if (m.getId() == movieId) {
+            std::cout << m;
+            return;
+        }
+    }
 }
