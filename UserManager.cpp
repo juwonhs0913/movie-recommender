@@ -23,9 +23,6 @@ void UserManager::printAllUsers() const {
 }
 
 bool UserManager::isExistingUser(int userId) const {
-    int userId;
-    std::cout << "사용자 ID 입력: ";
-    std::cin >> userId;
     for (const User& u : users)
         if (u.getId() == userId) return true;
     return false;
