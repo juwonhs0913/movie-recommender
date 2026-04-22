@@ -36,16 +36,7 @@ int main() {
             case 4: m_manager.sortByRating(); break;
             case 5: u_manager.addUser(); break;
             case 6: u_manager.printAllUsers(); break;
-            case 7: {
-                int userId;
-                std::cout << "사용자 ID 입력: ";
-                std::cin >> userId;
-                std::cin.ignore();
-                
-                if (u_manager.isExistingUser(userId)) m_manager.addRating();
-                else std::cout << "존재하지 않는 사용자입니다.\n";
-                break;
-            }
+            case 7: m_manager.addRating(u_manager); break;
             case 8: m_manager.ratingByMovie(); break;
         }
     }

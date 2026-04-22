@@ -3,6 +3,17 @@
 #include <vector>
 #include <string>
 
+class UserManager {
+private:
+    std::vector<User> users;
+    int currentUserId = 1;
+public:
+    UserManager();
+    void addUser();
+    void printAllUsers() const;     
+    bool isExistingUser(int userId) const;    
+};
+
 class MovieManager {
 private:
     std::vector<Movie> movies;
@@ -11,22 +22,10 @@ public:
     MovieManager();
 
     void addMovie();
-    void findByTitle();
-    void printAllMovies();                        
-    void sortByRating();                         
-    bool isExistingMovie(int movieId);          
-    void addRating();
-    void ratingByMovie();              
-
-};
-
-class UserManager {
-private:
-    std::vector<User> users;
-    int currentUserId = 1;
-public:
-    UserManager();
-    void addUser();
-    void printAllUsers();
-    bool isExistingUser(int userId);
+    void findByTitle() const;       
+    void printAllMovies() const;    
+    void sortByRating() const;      
+    bool isExistingMovie(int movieId) const;  
+    void ratingByMovie() const;  
+    void addRating(const UserManager& u_manager);
 };

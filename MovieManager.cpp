@@ -24,7 +24,7 @@ void MovieManager::addMovie() {
     }
 }
 
-void MovieManager::findByTitle() {
+void MovieManager::findByTitle() const {
     std::string title;
     bool found = false;
 
@@ -40,7 +40,7 @@ void MovieManager::findByTitle() {
     if (!found) std::cout << "검색 결과가 없습니다.\n";
 }
 
-void MovieManager::printAllMovies() {
+void MovieManager::printAllMovies() const {
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
         return;
@@ -49,7 +49,7 @@ void MovieManager::printAllMovies() {
     std::cout << "총 " << movies.size() << "편\n";
 }
 
-void MovieManager::sortByRating() {
+void MovieManager::sortByRating() const {
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
         return;
@@ -59,31 +59,43 @@ void MovieManager::sortByRating() {
     for (const Movie& m : sorted) std::cout << m << "\n";
 }
 
-bool MovieManager::isExistingMovie(int movieId) {
+bool MovieManager::isExistingMovie(int movieId) const {
     for (const Movie& m : movies)
         if (m.getId() == movieId) return true;
     return false;
 }
 
-void MovieManager::addRating() {
-    int movieId;
-    double score;
+void MovieManager::addRating(const UserManager& u_manager) {
+    int userId;
+    std::cout << "사용자 ID 입력: ";
+    std::cin >> userId;
+    std::cin.ignore();
 
-    std::cout << "영화 ID를 입력하세요: ";
-    std::cin >> movieId;
-
-    if (!isExistingMovie(movieId)) {
-        std::cout << "존재하지 않는 영화입니다.\n";
+    if (!u_manager.isExistingUser(userId)) {
+        std::cout << "존재하지 않는 사용자입니다.\n";
         return;
     }
 
-    std::cout << "평점을 입력하세요: ";
+    int movieId;
+    std::cout << "영화 ID 입력: ";
+    std::cin >> movieId;
+    std::cin.ignore();
+
+    if (!isExistingMovie(movieId)) {
+        std::cout << "존재하지 않는 영화 ID입니다.\n";
+        return;
+    }
+
+    double score;
+    std::cout << "평점 (0.0~5.0): ";
     std::cin >> score;
+    std::cin.ignore();
 
     if (score < 0.0 || score > 5.0) {
         std::cout << "평점은 0.0~5.0 사이여야 합니다.\n";
         return;
     }
+
     for (Movie& m : movies) {
         if (m.getId() == movieId) {
             m.addRating(score);
@@ -93,7 +105,7 @@ void MovieManager::addRating() {
     }
 }
 
-void MovieManager::ratingByMovie() {
+void MovieManager::ratingByMovie() const {
     int movieId;
     std::cout << "영화의 ID를 입력하세요: ";
     std::cin >> movieId;
