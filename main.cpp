@@ -15,7 +15,7 @@ void showMenu() {
     std::cout << "[ 평점 ]\n";
     std::cout << "  7. 평점 입력\n";
     std::cout << "  8. 영화별 평점 보기\n\n";
-    std::cout << "0. 종료\n";
+    std::cout << "  0. 종료\n\n";
     std::cout << "선택 > ";
 }
 

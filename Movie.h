@@ -60,6 +60,4 @@ public:
     int    getMovieId() const;
     double getScore()   const;
     void   display()    const;
-
-    friend std::ostream& operator<<(std::ostream& os, const Rating& r);
 };

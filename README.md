@@ -1,1 +1,1 @@
-M1: Movie/User/Rating 클래스
+M2: MovieManager/UserManager 클래스

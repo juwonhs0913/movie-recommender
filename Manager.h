@@ -29,3 +29,4 @@ public:
     void ratingByMovie() const;  
     void addRating(const UserManager& u_manager);
 };
+
