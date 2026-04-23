@@ -14,16 +14,13 @@ void MovieManager::addMovie() {
     std::cout << "출시 연도: ";
     std::cin >> year;
     
-    if (year < 1888 || year > 2100) {
-        std::cout << "연도는 1888~2100 사이여야 합니다.\n";
-        return;
-    }
-    else {
-        movies.push_back(Movie(currentMovieId++, title, genre, year));
+    Movie m(currentMovieId++, title, genre, year);
+    if(m.setReleaseYear(year)) {
+        movies.push_back(m);
         std::cout << "영화가 추가되었습니다. (ID: " << currentMovieId - 1 << ")\n";
+
     }
 }
-
 void MovieManager::findByTitle() const {
     std::string title;
     bool found = false;
@@ -57,7 +54,7 @@ void MovieManager::sortByRating() const {
     std::vector<Movie> sorted = movies;
     std::sort(sorted.begin(), sorted.end(), [](const Movie& a, const Movie& b) {
     return a.getAverageRating() > b.getAverageRating();
-});
+    });
     for (const Movie& m : sorted) std::cout << m << "\n";
 }
 

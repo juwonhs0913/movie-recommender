@@ -20,12 +20,13 @@ double Movie::getAverageRating() const {
     return totalRating / ratingCount;
 }
 
-void Movie::setReleaseYear(int year) {
+bool Movie::setReleaseYear(int year) {
     if (year < 1888 || year > 2100) {
         std::cout << "유효하지 않은 연도입니다.\n";
-        return;
+        return false;
     }
     releaseYear = year;
+    return true;
 }
 
 void Movie::addRating(double r) {
