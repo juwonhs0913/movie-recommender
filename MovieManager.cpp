@@ -55,7 +55,6 @@ void MovieManager::sortByRating() const {
         return;
     }
     std::vector<Movie> sorted = movies;
-    //std::sort(sorted.begin(), sorted.end());
     std::sort(sorted.begin(), sorted.end(), [](const Movie& a, const Movie& b) {
     return a.getAverageRating() > b.getAverageRating();
 });

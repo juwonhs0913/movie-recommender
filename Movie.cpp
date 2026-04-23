@@ -35,7 +35,7 @@ void Movie::addRating(double r) {
 }
 
 bool Movie::operator==(const Movie& other) const {
-    return id == other.id;
+    return title == other.title;
 }
 
 bool Movie::operator<(const Movie& other) const {
