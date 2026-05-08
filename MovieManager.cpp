@@ -1,43 +1,24 @@
-#include "Manager.h"
+#include "MovieManager.h"
 #include <iostream>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
-MovieManager::MovieManager() {}
+MovieManager::MovieManager() : nextId(1) {}
 
-void MovieManager::addMovie() {
-    std::string title, genre;
-    int year;
-    std::cout << "영화 제목: ";
-    std::getline(std::cin, title);
-    std::cout << "장르: ";
-    std::getline(std::cin, genre);
-    std::cout << "출시 연도: ";
-    std::cin >> year;
-    
-    Movie m(currentMovieId++, title, genre, year);
+void MovieManager::addMovie(const std::string& title,
+                             const std::string& genre, int year) {
+    Movie m(nextId, title, genre, year);
     if(m.setReleaseYear(year)) {
         movies.push_back(m);
-        std::cout << "영화가 추가되었습니다. (ID: " << currentMovieId - 1 << ")\n";
-
+        std::cout << "ID:" << nextId++ << " [" << title << "]가 추가되었습니다.\n";
+    }
+    else{
+        std::cout << "유효하지 않은 연도 입니다." << std::endl;
     }
 }
-void MovieManager::findByTitle() const {
-    std::string title;
-    bool found = false;
 
-    std::cout << "찾을 영화를 입력하세요: ";
-    std::getline(std::cin, title);
-
-    for (const Movie& m : movies) {
-        if (m.getTitle().find(title) != std::string::npos) {
-            std::cout << m << "\n";
-            found = true;
-        }
-    }
-    if (!found) std::cout << "검색 결과가 없습니다.\n";
-}
-
-void MovieManager::printAllMovies() const {
+void MovieManager::printAll() const {
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
         return;
@@ -46,77 +27,92 @@ void MovieManager::printAllMovies() const {
     std::cout << "총 " << movies.size() << "편\n";
 }
 
-void MovieManager::sortByRating() const {
+void MovieManager::SortByRating() const {
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
         return;
     }
+
     std::vector<Movie> sorted = movies;
-    std::sort(sorted.begin(), sorted.end(), [](const Movie& a, const Movie& b) {
-    return a.getAverageRating() > b.getAverageRating();
-    });
-    for (const Movie& m : sorted) std::cout << m << "\n";
-}
+    std::sort(sorted.begin(), sorted.end(),
+              [](const Movie& a, const Movie& b) {
+                  return a.getAverageRating() > b.getAverageRating();
+              });
 
-bool MovieManager::isExistingMovie(int movieId) const {
-    for (const Movie& m : movies)
-        if (m.getId() == movieId) return true;
-    return false;
-}
-
-void MovieManager::addRating(const UserManager& u_manager) {
-    int userId;
-    std::cout << "사용자 ID 입력: ";
-    std::cin >> userId;
-    std::cin.ignore();
-
-    if (!u_manager.isExistingUser(userId)) {
-        std::cout << "존재하지 않는 사용자입니다.\n";
-        return;
-    }
-
-    int movieId;
-    std::cout << "영화 ID 입력: ";
-    std::cin >> movieId;
-    std::cin.ignore();
-
-    if (!isExistingMovie(movieId)) {
-        std::cout << "존재하지 않는 영화 ID입니다.\n";
-        return;
-    }
-
-    double score;
-    std::cout << "평점 (0.0~5.0): ";
-    std::cin >> score;
-    std::cin.ignore();
-
-    if (score < 0.0 || score > 5.0) {
-        std::cout << "평점은 0.0~5.0 사이여야 합니다.\n";
-        return;
-    }
-
-    for (Movie& m : movies) {
-        if (m.getId() == movieId) {
-            m.addRating(score);
-            std::cout << "평점이 등록되었습니다.\n";
-            return;
-        }
+    for (const Movie& m : sorted) {
+        std::cout << m << "\n";
     }
 }
 
-void MovieManager::ratingByMovie() const {
-    int movieId;
-    std::cout << "영화의 ID를 입력하세요: ";
-    std::cin >> movieId;
-
-    if (!isExistingMovie(movieId)) {
-        std::cout << "존재하지 않는 영화 ID입니다.\n";
-        return;
-    }
+void MovieManager::searchByTitle(const std::string& title) const {
+    bool found = false;
     for (const Movie& m : movies) {
-        if (m.getId() == movieId) {
-            std::cout << m;
-            return;
+        if (m.getTitle().find(title) != std::string::npos) {
+            std::cout << m << "\n";
+            found = true;
         }
     }
+    if (!found) {
+        std::cout << "검색 결과가 없습니다.\n";
+    }
+}
+
+Movie* MovieManager::findById(int id) {
+    for (Movie& m : movies) {
+        if (m.getId() == id) return &m;
+    }
+    return nullptr;
+}
+
+const std::vector<Movie>& MovieManager::getMovies() const {
+    return movies;
+}
+
+void MovieManager::loadFromFile(const std::string& filename) {
+    std::ifstream file(filename);          
+    if (!file.is_open()) {                 
+        std::cerr << "Error: " << filename << " 을 열 수 없습니다.\n";
+        return;
+    }
+
+    std::string line;
+    std::getline(file, line);              
+
+    while (std::getline(file, line)) {     
+        std::stringstream ss(line);
+        std::string token;
+
+        std::getline(ss, token, ','); int            id = std::stoi(token);
+        std::getline(ss, token, ','); std::string title = token;
+        std::getline(ss, token, ','); std::string genre = token;
+        std::getline(ss, token, ','); int          year = std::stoi(token);
+
+        Movie m(id, title, genre, year);     
+        movies.push_back(m);
+
+        if (id >= nextId) nextId = id + 1;
+    }
+
+    file.close();
+    std::cout << filename << " 로드 완료: " << movies.size() << "건\n";
+}
+
+void MovieManager::saveToFile(const std::string& filename) const {
+    std::ofstream file(filename);          
+    if (!file.is_open()) {
+        std::cerr << "Error: " << filename << " 저장 실패\n";
+        return;
+    }
+
+    file << "id,title,genre,year\n";
+
+    for (const Movie& m : movies) {
+        file << m.getId()            << ","
+             << m.getTitle()         << ","
+             << m.getGenre()         << ","
+             << m.getReleaseYear()   << "\n";
+    }
+
+    file.close();
+    std::cout << filename << " 저장 완료: " << movies.size() << "건\n";
 }

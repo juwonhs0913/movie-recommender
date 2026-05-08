@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -g
 
 TARGET = movie
-SRCS = main.cpp Movie.cpp Rating.cpp User.cpp MovieManager.cpp UserManager.cpp
+SRCS = main.cpp Movie.cpp Rating.cpp User.cpp MovieManager.cpp RatingManager.cpp UserManager.cpp SimilarityCalculator.cpp
 OBJS = $(SRCS:.cpp=.o)	
 
 all: $(TARGET)
@@ -15,9 +15,12 @@ $(TARGET): $(OBJS)
 
 main.o: Movie.h
 Movie.o: Movie.h
-Rating.o: Movie.h
-User.o: Movie.h
-Manager.o: Manager.h
+Rating.o: Rating.h
+User.o: User.h
+MovieManager.o: MovieManager.h
+RatingManager.o: RatingManager.h
+UserManager.o: UserManager.h
+SimilarityCalculator.o = SimilarityCalculator.h
 
 
 clean:

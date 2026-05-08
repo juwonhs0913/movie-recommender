@@ -40,7 +40,7 @@ bool Movie::operator==(const Movie& other) const {
 }
 
 bool Movie::operator<(const Movie& other) const {
-    return getAverageRating() < other.getAverageRating(); 
+    return getAverageRating() < other.getAverageRating();
 }
 
 std::ostream& operator<<(std::ostream& os, const Movie& m) {
