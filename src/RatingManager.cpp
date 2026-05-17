@@ -79,7 +79,9 @@ void RatingManager::loadFromFile(const std::string& filename) {
     std::string line;
     std::getline(file, line);              
 
-    while (std::getline(file, line)) {     
+    while (std::getline(file, line)) {
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+             
         std::stringstream ss(line);
         std::string token;
 
@@ -94,7 +96,7 @@ void RatingManager::loadFromFile(const std::string& filename) {
     }
 
     file.close();
-    std::cout << filename << " 로드 완료: " << ratings.size() << "건\n";
+    std::cout << filename << " 로드 완료: " << size() << "건\n";
 }
 
 void RatingManager::saveToFile(const std::string& filename) const {
@@ -113,5 +115,5 @@ void RatingManager::saveToFile(const std::string& filename) const {
     }
 
     file.close();
-    std::cout << filename << " 저장 완료: " << ratings.size() << "건\n";
+    std::cout << filename << " 저장 완료: " << size() << "건\n";
 }
