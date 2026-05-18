@@ -3,6 +3,7 @@
 #include "MovieManager.h"
 #include "UserManager.h"
 #include "RatingManager.h"
+#include "Recommender.h"
 
 void printMenu() {
     std::cout << "\n===== Movie Recommender =====\n";
@@ -14,9 +15,10 @@ void printMenu() {
     std::cout << "[ 사용자 ]\n";
     std::cout << "   5. 사용자 추가\n";
     std::cout << "   6. 사용자 목록 출력\n";
+    std::cout << "   7. 사용자 맞춤 추천 영화\n";
     std::cout << "[ 평점 ]\n";
-    std::cout << "   7. 평점 입력\n";
-    std::cout << "   8. 영화별 평점 보기\n";
+    std::cout << "   8. 평점 입력\n";
+    std::cout << "   9. 영화별 평점 보기\n";
     std::cout << " 0. 저장 및 종료\n";
     std::cout << "선택 > ";
 }
@@ -25,6 +27,7 @@ int main() {
     MovieManager movieMgr;
     UserManager  userMgr;
     RatingManager ratingMgr;
+    Recommender recommender(movieMgr, userMgr, ratingMgr);
 
     movieMgr.loadFromFile("data/movies.csv");
     userMgr.loadFromFile("data/users.csv");
@@ -71,7 +74,10 @@ int main() {
         }
 
         else if (choice == 4) {
-            movieMgr.SortByRating();
+            std::vector<Movie> sortedMovies = movieMgr.SortByRating();
+            for (const Movie& m : sortedMovies) {
+                std::cout << m << std::endl;
+            }
         }
 
         else if (choice == 5) {
@@ -89,6 +95,17 @@ int main() {
         }
 
         else if (choice == 7) {
+            int userId;
+            std::cout << "사용자 ID: ";
+            std::cin >> userId;
+            auto result = recommender.recommend(userId);
+            for (int id : result) {
+                Movie* m = movieMgr.findById(id);
+                if (m) std::cout << *m << "\n";
+            }
+        }
+        
+        else if (choice == 8) {
             int userId, movieId;
             double score;
             std::cout << "사용자 ID: ";
@@ -101,7 +118,7 @@ int main() {
             ratingMgr.addRating(userId, movieId, score, movieMgr, userMgr);
         }
 
-        else if (choice == 8) {
+        else if (choice == 9) {
             int movieId;
             std::cout << "영화 ID: ";
             std::cin >> movieId;

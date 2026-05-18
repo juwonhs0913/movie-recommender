@@ -19,7 +19,7 @@ void RatingManager::addRating(int userId, int movieId, double score,
         std::cout << "존재하지 않는 영화 ID입니다.\n";
         return;
     }
-
+    
     Rating rating(userId, movieId, score);
 
     if (rating.getScore() != -1) {

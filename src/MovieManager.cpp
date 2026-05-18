@@ -27,10 +27,10 @@ void MovieManager::printAll() const {
     std::cout << "총 " << movies.size() << "편\n";
 }
 
-void MovieManager::SortByRating() const {
+std::vector<Movie> MovieManager::SortByRating() const {
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
-        return;
+        return {};
     }
 
     std::vector<Movie> sorted = movies;
@@ -39,10 +39,9 @@ void MovieManager::SortByRating() const {
                   return a.getAverageRating() > b.getAverageRating();
               });
 
-    for (const Movie& m : sorted) {
-        std::cout << m << "\n";
-    }
+    return sorted;
 }
+
 
 void MovieManager::searchByTitle(const std::string& title) const {
     bool found = false;
