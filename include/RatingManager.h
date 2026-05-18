@@ -10,7 +10,6 @@ private:
     std::vector<Rating> ratings;
 
 public:
-    virtual ~RatingManager(){}
     RatingManager();
 
     void addRating(int userId, int movieId, double score,
@@ -23,6 +22,7 @@ public:
     std::vector<int> getAllUserId() const;
 
     void loadFromFile(const std::string& filename) override;
+    void loadFromFile(const std::string& filename, MovieManager& moviemgr); //함수 오버로딩, rating.csv의 평점정보를 사용하기 위함
     void saveToFile(const std::string& filename) const override;
     int size() const override { return ratings.size();}
 };

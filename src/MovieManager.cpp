@@ -79,8 +79,6 @@ void MovieManager::loadFromFile(const std::string& filename) {
     std::getline(file, line);              
 
     while (std::getline(file, line)) {    
-        if (!line.empty() && line.back() == '\r') line.pop_back();
-        
         std::stringstream ss(line);
         std::string token;
 

@@ -10,7 +10,6 @@ private:
     int nextId;
 
 public:
-    virtual ~UserManager(){}
     UserManager();
 
     void addUser(const std::string& name, const std::string& email);

@@ -28,7 +28,7 @@ int main() {
 
     movieMgr.loadFromFile("data/movies.csv");
     userMgr.loadFromFile("data/users.csv");
-    ratingMgr.loadFromFile("data/ratings.csv");
+    ratingMgr.loadFromFile("data/ratings.csv", movieMgr);
 
     int choice = -1;
 

@@ -10,7 +10,6 @@ private:
     int nextId;
 
 public:
-    virtual ~MovieManager(){}
     MovieManager();
     
 

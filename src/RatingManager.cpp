@@ -80,8 +80,6 @@ void RatingManager::loadFromFile(const std::string& filename) {
     std::getline(file, line);              
 
     while (std::getline(file, line)) {
-        if (!line.empty() && line.back() == '\r') line.pop_back();
-             
         std::stringstream ss(line);
         std::string token;
 
@@ -97,6 +95,16 @@ void RatingManager::loadFromFile(const std::string& filename) {
 
     file.close();
     std::cout << filename << " 로드 완료: " << size() << "건\n";
+}
+
+void RatingManager::loadFromFile(const std::string& filename, MovieManager& movieMgr) {
+    loadFromFile(filename); 
+
+    for (const Rating& r : ratings) {
+        Movie* movie = movieMgr.findById(r.getMovieId());
+        if (movie != nullptr)
+            movie->addRating(r.getScore());
+    }
 }
 
 void RatingManager::saveToFile(const std::string& filename) const {
