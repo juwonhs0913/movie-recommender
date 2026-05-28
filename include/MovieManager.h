@@ -18,7 +18,7 @@ public:
     std::vector<Movie> SortByRating() const;       
     void searchByTitle(const std::string& keyword) const;
 
-    Movie* findById(int id);
+    Movie& findById(int id);
     const std::vector<Movie>& getMovies() const;
     
     void loadFromFile(const std::string& filename) override;

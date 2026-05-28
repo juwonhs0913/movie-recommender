@@ -56,11 +56,11 @@ void MovieManager::searchByTitle(const std::string& title) const {
     }
 }
 
-Movie* MovieManager::findById(int id) {
+Movie& MovieManager::findById(int id) {
     for (Movie& m : movies) {
-        if (m.getId() == id) return &m;
+        if (m.getId() == id) return m;
     }
-    return nullptr;
+    throw std::out_of_range("영화ID가 존재하지 않습니다.");
 }
 
 const std::vector<Movie>& MovieManager::getMovies() const {
