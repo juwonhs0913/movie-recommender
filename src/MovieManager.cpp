@@ -76,20 +76,24 @@ void MovieManager::loadFromFile(const std::string& filename) {
 
     std::string line;
     std::getline(file, line);              
+    int lineNum = 0;
+    while (std::getline(file, line)) {
+        lineNum++;
+        try {
+            std::stringstream ss(line);
+            std::string token;
+            
+            std::getline(ss, token, ','); int id = std::stoi(token);
+            std::getline(ss, token, ','); std::string title = token;
+            std::getline(ss, token, ','); std::string genre = token;
+            std::getline(ss, token, ','); int year = std::stoi(token);
 
-    while (std::getline(file, line)) {    
-        std::stringstream ss(line);
-        std::string token;
-
-        std::getline(ss, token, ','); int            id = std::stoi(token);
-        std::getline(ss, token, ','); std::string title = token;
-        std::getline(ss, token, ','); std::string genre = token;
-        std::getline(ss, token, ','); int          year = std::stoi(token);
-
-        Movie m(id, title, genre, year);     
-        movies.push_back(m);
-
-        if (id >= nextId) nextId = id + 1;
+            Movie m(id, title, genre, year);
+            movies.push_back(m);
+            if (id >= nextId) nextId = id + 1;
+        } catch (const std::exception& e) {
+            std::cerr << lineNum << "번 줄 건너뜀: " << e.what() << std::endl; 
+        }
     }
 
     file.close();

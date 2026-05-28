@@ -75,7 +75,7 @@ std::vector<int> Recommender::recommend(int targetUserId, int n) const {
 
     const std::vector<Rating>& myRatings = ratingMgr.findById(targetUserId);
     if (myRatings.empty()) {
-        std::cout << "[ << targetUserId << ]" << "사용자의 평점 데이터가 없습니다." << std::endl
+        std::cout << "[" << targetUserId << " ]" << "사용자의 평점 데이터가 없습니다." << std::endl
                     << "전체 평점 TOP-" << n << " 영화를 추천합니다." << std::endl;
         return getTopRatedMovies(n);
     }
