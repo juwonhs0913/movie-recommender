@@ -12,29 +12,28 @@ private:
 
 public:
     MovieManager();
+    
 
     void addMovie(const std::string& title, const std::string& genre, int year);
-    void printAll() const;
+    void printAll() const;      
     void searchByTitle(const std::string& keyword) const;
-
     std::vector<int> getTopN(int n) const;
 
-    void SortByRating();
+    Movie* findById(int id);
+    const Movie* findById(int id) const;
+    const std::vector<Movie>& getMovies() const;
+    
+    void loadFromFile(const std::string& filename) override;
+    void saveToFile(const std::string& filename) const override;
+    int size() const override {return movies.size();}
+
     void sortByTitle();
     void sortByYear();
+    void SortByRating(); 
     void sortById();
-
 
     double getAverageRating() const;
     std::map<std::string, double> getAverageRatingByGenre() const;
     std::string getMostPopularGenre() const;
     void showStatistics() const;
-
-    Movie* findById(int id);
-    const Movie* findById(int id) const;
-    const std::vector<Movie>& getMovies() const;
-
-    void loadFromFile(const std::string& filename) override;
-    void saveToFile(const std::string& filename) const override;
-    int size() const override { return movies.size(); }
 };

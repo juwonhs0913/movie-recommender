@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
-#include <chrono>
-#include <numeric>
-#include <map>
-#include <cctype>
+#include <chrono>  
+#include <numeric> 
+#include <map>     
+#include <cctype>  
 
 MovieManager::MovieManager() : nextId(1) {}
 
@@ -34,13 +34,16 @@ void MovieManager::printAll() const {
 void MovieManager::SortByRating() {
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
-        return;
+        return ;
     }
+
     std::sort(movies.begin(), movies.end(),
               [](const Movie& a, const Movie& b) {
                   return a.getAverageRating() > b.getAverageRating();
               });
+
 }
+
 
 void MovieManager::searchByTitle(const std::string& title) const {
     bool found = false;
@@ -58,7 +61,7 @@ void MovieManager::searchByTitle(const std::string& title) const {
 std::vector<int> MovieManager::getTopN(int n) const {
     if (movies.empty()) return {};
 
-    auto sorted = movies;
+    auto sorted = movies; // 복사 (원본 보호)
     int limit = std::min((int)sorted.size(), n);
 
     std::partial_sort(sorted.begin(), sorted.begin() + limit, sorted.end(),
@@ -80,7 +83,7 @@ void MovieManager::sortByTitle() {
     }
     std::sort(movies.begin(), movies.end(),
               [](const Movie& a, const Movie& b) {
-                  return a.getTitle() < b.getTitle();
+                  return a.getTitle() < b.getTitle(); 
               });
 }
 
@@ -91,7 +94,7 @@ void MovieManager::sortByYear() {
     }
     std::sort(movies.begin(), movies.end(),
               [](const Movie& a, const Movie& b) {
-                  return a.getReleaseYear() > b.getReleaseYear();
+                  return a.getReleaseYear() > b.getReleaseYear(); 
               });
 }
 
@@ -102,13 +105,10 @@ void MovieManager::sortById() {
     }
     std::sort(movies.begin(), movies.end(),
               [](const Movie& a, const Movie& b) {
-                  return a.getId() < b.getId();
+                  return a.getId() < b.getId(); 
               });
 }
 
-// [STEP 3] 통계 기능 구현
-
-// (1) 전체 평균 평점 — std::accumulate + lambda
 double MovieManager::getAverageRating() const {
     if (movies.empty()) {
         throw std::runtime_error("영화 데이터가 없습니다.");
@@ -121,7 +121,6 @@ double MovieManager::getAverageRating() const {
     return sum / static_cast<double>(movies.size());
 }
 
-// (2) 장르별 평균 평점 — map 두 개(합/개수) + C++17 구조적 바인딩
 std::map<std::string, double> MovieManager::getAverageRatingByGenre() const {
     std::map<std::string, double> sumByGenre;
     std::map<std::string, int>    countByGenre;
@@ -138,7 +137,6 @@ std::map<std::string, double> MovieManager::getAverageRatingByGenre() const {
     return avgByGenre;
 }
 
-// (3) 평균 평점 최고 장르 — getAverageRatingByGenre 재사용 + max_element
 std::string MovieManager::getMostPopularGenre() const {
     if (movies.empty()) {
         throw std::runtime_error("영화 데이터가 없습니다.");
@@ -155,7 +153,6 @@ std::string MovieManager::getMostPopularGenre() const {
     return it->first;
 }
 
-// (4) 통계 서브메뉴 — while 루프 + switch + try-catch
 void MovieManager::showStatistics() const {
     while (true) {
         std::cout << "\n=== 통계 메뉴 ===\n";
@@ -197,7 +194,6 @@ void MovieManager::showStatistics() const {
                         std::cout << "1 이상의 값을 입력하세요.\n";
                         break;
                     }
-                    // getTopN 재사용: 원본 보호 로직 공유
                     std::vector<int> topIds = getTopN(n);
                     std::cout << "\n=== Top " << topIds.size() << " 영화 ===\n";
                     for (int i = 0; i < (int)topIds.size(); i++) {
@@ -236,21 +232,21 @@ const std::vector<Movie>& MovieManager::getMovies() const {
 }
 
 void MovieManager::loadFromFile(const std::string& filename) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
+    std::ifstream file(filename);          
+    if (!file.is_open()) {                 
         std::cerr << "Error: " << filename << " 을 열 수 없습니다.\n";
         return;
     }
 
     std::string line;
-    std::getline(file, line);
+    std::getline(file, line);              
     int lineNum = 0;
     while (std::getline(file, line)) {
         lineNum++;
         try {
             std::stringstream ss(line);
             std::string token;
-
+            
             std::getline(ss, token, ','); int id = std::stoi(token);
             std::getline(ss, token, ','); std::string title = token;
             std::getline(ss, token, ','); std::string genre = token;
@@ -260,7 +256,7 @@ void MovieManager::loadFromFile(const std::string& filename) {
             movies.push_back(m);
             if (id >= nextId) nextId = id + 1;
         } catch (const std::exception& e) {
-            std::cerr << lineNum << "번 줄 건너뜀: " << e.what() << std::endl;
+            std::cerr << lineNum << "번 줄 건너뜀: " << e.what() << std::endl; 
         }
     }
 
@@ -269,7 +265,7 @@ void MovieManager::loadFromFile(const std::string& filename) {
 }
 
 void MovieManager::saveToFile(const std::string& filename) const {
-    std::ofstream file(filename);
+    std::ofstream file(filename);          
     if (!file.is_open()) {
         std::cerr << "Error: " << filename << " 저장 실패\n";
         return;
@@ -278,10 +274,10 @@ void MovieManager::saveToFile(const std::string& filename) const {
     file << "id,title,genre,year\n";
 
     for (const Movie& m : movies) {
-        file << m.getId()          << ","
-             << m.getTitle()       << ","
-             << m.getGenre()       << ","
-             << m.getReleaseYear() << "\n";
+        file << m.getId()            << ","
+             << m.getTitle()         << ","
+             << m.getGenre()         << ","
+             << m.getReleaseYear()   << "\n";
     }
 
     file.close();
