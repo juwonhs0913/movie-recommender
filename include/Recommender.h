@@ -17,7 +17,7 @@ private:
                             const std::vector<Rating>& user2) const;
 
     std::vector<std::pair<int, int>> findSimilarUsers(int targetUserId, int k = 5) const;
-    std::vector<int> getTopRatedMovies(int n = 5) const;
+    //std::vector<int> getTopRatedMovies(int n = 5) const;
 
     std::set<int> getWatchedMovieIds(const std::vector<Rating>& ratings) const;
     std::vector<std::pair<int, double>> calculateCandidates(

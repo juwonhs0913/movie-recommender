@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <chrono> //시간 측정용
 
 MovieManager::MovieManager() : nextId(1) {}
 
@@ -27,19 +28,23 @@ void MovieManager::printAll() const {
     std::cout << "총 " << movies.size() << "편\n";
 }
 
-std::vector<Movie> MovieManager::SortByRating() const {
+void MovieManager::SortByRating() {
+    //시간 측정
+    auto start = std::chrono::high_resolution_clock::now();
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
-        return {};
+        return ;
     }
 
-    std::vector<Movie> sorted = movies;
-    std::sort(sorted.begin(), sorted.end(),
+    std::sort(movies.begin(), movies.end(),
               [](const Movie& a, const Movie& b) {
                   return a.getAverageRating() > b.getAverageRating();
               });
+    //시간 측정
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << "[성능 측정] SortByRating 실행 시간: " 
+              << std::chrono::duration<double, std::milli>(end - start).count() << " ms" << std::endl;
 
-    return sorted;
 }
 
 
@@ -56,6 +61,18 @@ void MovieManager::searchByTitle(const std::string& title) const {
     }
 }
 
+std::vector<int> MovieManager::getTopN(int n) {
+    MovieManager::SortByRating();
+    std::vector<int> topNIds;
+    int limit = std::min((int)movies.size(), n);
+    
+    for (int i = 0; i < limit; i++) {
+        topNIds.push_back(movies[i].getId());
+    }
+    
+    return topNIds;
+}
+
 Movie* MovieManager::findById(int id) {
     for (Movie& m : movies) {
         if (m.getId() == id) return &m;
@@ -68,6 +85,9 @@ const std::vector<Movie>& MovieManager::getMovies() const {
 }
 
 void MovieManager::loadFromFile(const std::string& filename) {
+    //시간 측정
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::ifstream file(filename);          
     if (!file.is_open()) {                 
         std::cerr << "Error: " << filename << " 을 열 수 없습니다.\n";
@@ -96,8 +116,14 @@ void MovieManager::loadFromFile(const std::string& filename) {
         }
     }
 
+
     file.close();
     std::cout << filename << " 로드 완료: " << size() << "건\n";
+
+    //시간 측정
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << "[성능 측정] loadFromFile 실행 시간: " 
+              << std::chrono::duration<double, std::milli>(end - start).count() << " ms" << std::endl;
 }
 
 void MovieManager::saveToFile(const std::string& filename) const {

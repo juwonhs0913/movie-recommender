@@ -74,10 +74,8 @@ int main() {
         }
 
         else if (choice == 4) {
-            std::vector<Movie> sortedMovies = movieMgr.SortByRating();
-            for (const Movie& m : sortedMovies) {
-                std::cout << m << std::endl;
-            }
+            movieMgr.SortByRating();
+            movieMgr.printAll();
         }
 
         else if (choice == 5) {

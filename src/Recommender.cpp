@@ -66,17 +66,19 @@ std::vector<std::pair<int,int>> Recommender::findSimilarUsers(int targetUserId, 
 
     return similarities;
 }
-
+/*
 std::vector<int> Recommender::getTopRatedMovies(int n) const {
     std::vector<int> result;
 
-    std::vector<Movie> sortedMovies = movieMgr.SortByRating(); 
+    movieMgr.SortByRating(); 
+
     for (int i = 0; i < n; i++) {
-        result.push_back(sortedMovies[i].getId());
+        result.push_back(movies[i].getId());
     }
 
     return result;
 }
+    */
 
 std::set<int> Recommender::getWatchedMovieIds(const std::vector<Rating>& ratings) const {
     std::set<int> watched;
@@ -127,12 +129,12 @@ std::vector<int> Recommender::recommend(int targetUserId, int n) const {
     
     if (myRatings.empty()) {
         std::cout << "사용자 데이터 부족. 전체 상위 영화를 추천합니다." << std::endl;
-        return getTopRatedMovies(n);
+        return movieMgr.getTopN(n);
     }
 
     auto similarUsers = findSimilarUsers(targetUserId, 5);
     if (similarUsers.empty()) {
-        return getTopRatedMovies(n);
+        return movieMgr.getTopN(n);
     }
 
     auto watchedIds = getWatchedMovieIds(myRatings);
