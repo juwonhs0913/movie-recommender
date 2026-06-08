@@ -16,7 +16,6 @@ public:
                    MovieManager& movieMgr, const UserManager& userMgr);
 
     void ratingByMovie(int movieId, MovieManager& movieMgr) const;
-
     std::vector<Rating> findById(int userId) const;
     const std::vector<Rating>& getRatings() const;
     std::vector<int> getAllUserId() const;

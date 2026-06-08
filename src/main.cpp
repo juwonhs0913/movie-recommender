@@ -11,7 +11,7 @@ void printMenu() {
     std::cout << "   1. 영화 추가\n";
     std::cout << "   2. 제목으로 검색\n";
     std::cout << "   3. 전체 목록 출력\n";
-    std::cout << "   4. 평점순 정렬 출력\n";
+    std::cout << "   4. 정렬 출력\n";
     std::cout << "[ 사용자 ]\n";
     std::cout << "   5. 사용자 추가\n";
     std::cout << "   6. 사용자 목록 출력\n";
@@ -19,6 +19,8 @@ void printMenu() {
     std::cout << "[ 평점 ]\n";
     std::cout << "   8. 평점 입력\n";
     std::cout << "   9. 영화별 평점 보기\n";
+    std::cout << "[ 통계 ]\n";
+    std::cout << "  10. 통계 보기\n";
     std::cout << " 0. 저장 및 종료\n";
     std::cout << "선택 > ";
 }
@@ -74,7 +76,31 @@ int main() {
         }
 
         else if (choice == 4) {
-            movieMgr.SortByRating();
+            // 정렬 서브메뉴
+            std::cout << "\n=== 정렬 옵션 ===\n";
+            std::cout << "   1. 평점순 (높은 순)\n";
+            std::cout << "   2. 가나다순 (제목)\n";
+            std::cout << "   3. 최신순 (개봉 연도)\n";
+            std::cout << "   4. ID순 (영화 ID)\n";
+            std::cout << "선택 > ";
+            int sortChoice;
+            std::cin >> sortChoice;
+            if (sortChoice == 1) {
+                movieMgr.SortByRating();
+            } 
+            else if (sortChoice == 2) {
+                movieMgr.sortByTitle();
+            }
+            else if (sortChoice == 3) {
+                movieMgr.sortByYear();
+            }
+            else if (sortChoice == 4) {
+                movieMgr.sortById();
+            } 
+            else {
+                std::cout << "잘못된 선택입니다.\n";
+                continue;
+            }
             movieMgr.printAll();
         }
 
@@ -121,6 +147,10 @@ int main() {
             std::cout << "영화 ID: ";
             std::cin >> movieId;
             ratingMgr.ratingByMovie(movieId, movieMgr);
+        }
+
+        else if (choice == 10) {
+            movieMgr.showStatistics();
         }
     }
 

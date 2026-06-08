@@ -66,19 +66,6 @@ std::vector<std::pair<int,int>> Recommender::findSimilarUsers(int targetUserId, 
 
     return similarities;
 }
-/*
-std::vector<int> Recommender::getTopRatedMovies(int n) const {
-    std::vector<int> result;
-
-    movieMgr.SortByRating(); 
-
-    for (int i = 0; i < n; i++) {
-        result.push_back(movies[i].getId());
-    }
-
-    return result;
-}
-    */
 
 std::set<int> Recommender::getWatchedMovieIds(const std::vector<Rating>& ratings) const {
     std::set<int> watched;

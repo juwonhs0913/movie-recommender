@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -g -Iinclude
+CXXFLAGS = -std=c++17 -Wall -Wextra -g -Iinclude -O2
 TARGET = movie-recommender
 SRCDIR = src
 OBJDIR = obj

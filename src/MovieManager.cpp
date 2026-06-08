@@ -3,7 +3,10 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
-#include <chrono> //시간 측정용
+#include <chrono>
+#include <numeric>
+#include <map>
+#include <cctype>
 
 MovieManager::MovieManager() : nextId(1) {}
 
@@ -29,24 +32,15 @@ void MovieManager::printAll() const {
 }
 
 void MovieManager::SortByRating() {
-    //시간 측정
-    auto start = std::chrono::high_resolution_clock::now();
     if (movies.empty()) {
         std::cout << "등록된 영화가 없습니다.\n";
-        return ;
+        return;
     }
-
     std::sort(movies.begin(), movies.end(),
               [](const Movie& a, const Movie& b) {
                   return a.getAverageRating() > b.getAverageRating();
               });
-    //시간 측정
-    auto end = std::chrono::high_resolution_clock::now();
-    std::cout << "[성능 측정] SortByRating 실행 시간: " 
-              << std::chrono::duration<double, std::milli>(end - start).count() << " ms" << std::endl;
-
 }
-
 
 void MovieManager::searchByTitle(const std::string& title) const {
     bool found = false;
@@ -61,15 +55,21 @@ void MovieManager::searchByTitle(const std::string& title) const {
     }
 }
 
-std::vector<int> MovieManager::getTopN(int n) {
-    MovieManager::SortByRating();
+std::vector<int> MovieManager::getTopN(int n) const {
+    if (movies.empty()) return {};
+
+    auto sorted = movies; // 복사 (원본 보호)
+    int limit = std::min((int)sorted.size(), n);
+
+    std::partial_sort(sorted.begin(), sorted.begin() + limit, sorted.end(),
+                      [](const Movie& a, const Movie& b) {
+                          return a.getAverageRating() > b.getAverageRating();
+                      });
+
     std::vector<int> topNIds;
-    int limit = std::min((int)movies.size(), n);
-    
     for (int i = 0; i < limit; i++) {
-        topNIds.push_back(movies[i].getId());
+        topNIds.push_back(sorted[i].getId());
     }
-    
     return topNIds;
 }
 
@@ -80,29 +80,33 @@ Movie* MovieManager::findById(int id) {
     throw std::out_of_range("영화ID가 존재하지 않습니다.");
 }
 
+const Movie* MovieManager::findById(int id) const {
+    for (const Movie& m : movies) {
+        if (m.getId() == id) return &m;
+    }
+    throw std::out_of_range("영화ID가 존재하지 않습니다.");
+}
+
 const std::vector<Movie>& MovieManager::getMovies() const {
     return movies;
 }
 
 void MovieManager::loadFromFile(const std::string& filename) {
-    //시간 측정
-    auto start = std::chrono::high_resolution_clock::now();
-
-    std::ifstream file(filename);          
-    if (!file.is_open()) {                 
+    std::ifstream file(filename);
+    if (!file.is_open()) {
         std::cerr << "Error: " << filename << " 을 열 수 없습니다.\n";
         return;
     }
 
     std::string line;
-    std::getline(file, line);              
+    std::getline(file, line);
     int lineNum = 0;
     while (std::getline(file, line)) {
         lineNum++;
         try {
             std::stringstream ss(line);
             std::string token;
-            
+
             std::getline(ss, token, ','); int id = std::stoi(token);
             std::getline(ss, token, ','); std::string title = token;
             std::getline(ss, token, ','); std::string genre = token;
@@ -112,22 +116,16 @@ void MovieManager::loadFromFile(const std::string& filename) {
             movies.push_back(m);
             if (id >= nextId) nextId = id + 1;
         } catch (const std::exception& e) {
-            std::cerr << lineNum << "번 줄 건너뜀: " << e.what() << std::endl; 
+            std::cerr << lineNum << "번 줄 건너뜀: " << e.what() << std::endl;
         }
     }
 
-
     file.close();
     std::cout << filename << " 로드 완료: " << size() << "건\n";
-
-    //시간 측정
-    auto end = std::chrono::high_resolution_clock::now();
-    std::cout << "[성능 측정] loadFromFile 실행 시간: " 
-              << std::chrono::duration<double, std::milli>(end - start).count() << " ms" << std::endl;
 }
 
 void MovieManager::saveToFile(const std::string& filename) const {
-    std::ofstream file(filename);          
+    std::ofstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error: " << filename << " 저장 실패\n";
         return;
@@ -136,10 +134,10 @@ void MovieManager::saveToFile(const std::string& filename) const {
     file << "id,title,genre,year\n";
 
     for (const Movie& m : movies) {
-        file << m.getId()            << ","
-             << m.getTitle()         << ","
-             << m.getGenre()         << ","
-             << m.getReleaseYear()   << "\n";
+        file << m.getId()          << ","
+             << m.getTitle()       << ","
+             << m.getGenre()       << ","
+             << m.getReleaseYear() << "\n";
     }
 
     file.close();
