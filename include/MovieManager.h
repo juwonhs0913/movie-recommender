@@ -24,6 +24,12 @@ public:
     void sortByYear();
     void sortById();
 
+
+    double getAverageRating() const;
+    std::map<std::string, double> getAverageRatingByGenre() const;
+    std::string getMostPopularGenre() const;
+    void showStatistics() const;
+
     Movie* findById(int id);
     const Movie* findById(int id) const;
     const std::vector<Movie>& getMovies() const;

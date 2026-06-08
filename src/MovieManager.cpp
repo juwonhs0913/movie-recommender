@@ -106,6 +106,117 @@ void MovieManager::sortById() {
               });
 }
 
+// [STEP 3] 통계 기능 구현
+
+// (1) 전체 평균 평점 — std::accumulate + lambda
+double MovieManager::getAverageRating() const {
+    if (movies.empty()) {
+        throw std::runtime_error("영화 데이터가 없습니다.");
+    }
+    double sum = std::accumulate(
+        movies.begin(), movies.end(), 0.0,
+        [](double acc, const Movie& m) {
+            return acc + m.getAverageRating();
+        });
+    return sum / static_cast<double>(movies.size());
+}
+
+// (2) 장르별 평균 평점 — map 두 개(합/개수) + C++17 구조적 바인딩
+std::map<std::string, double> MovieManager::getAverageRatingByGenre() const {
+    std::map<std::string, double> sumByGenre;
+    std::map<std::string, int>    countByGenre;
+
+    for (const auto& m : movies) {
+        sumByGenre[m.getGenre()]   += m.getAverageRating();
+        countByGenre[m.getGenre()]++;
+    }
+
+    std::map<std::string, double> avgByGenre;
+    for (const auto& [genre, sum] : sumByGenre) {
+        avgByGenre[genre] = sum / countByGenre[genre];
+    }
+    return avgByGenre;
+}
+
+// (3) 평균 평점 최고 장르 — getAverageRatingByGenre 재사용 + max_element
+std::string MovieManager::getMostPopularGenre() const {
+    if (movies.empty()) {
+        throw std::runtime_error("영화 데이터가 없습니다.");
+    }
+
+    auto avgByGenre = getAverageRatingByGenre();
+
+    auto it = std::max_element(
+        avgByGenre.begin(), avgByGenre.end(),
+        [](const std::pair<std::string, double>& a,
+           const std::pair<std::string, double>& b) {
+            return a.second < b.second;
+        });
+    return it->first;
+}
+
+// (4) 통계 서브메뉴 — while 루프 + switch + try-catch
+void MovieManager::showStatistics() const {
+    while (true) {
+        std::cout << "\n=== 통계 메뉴 ===\n";
+        std::cout << "   1. 전체 평균 평점\n";
+        std::cout << "   2. 장르별 평균 평점\n";
+        std::cout << "   3. Top N 영화\n";
+        std::cout << "   0. 돌아가기\n";
+        std::cout << "선택 > ";
+
+        int choice;
+        std::cin >> choice;
+
+        try {
+            switch (choice) {
+                case 1: {
+                    double avg = getAverageRating();
+                    std::cout << "전체 평균 평점: " << avg << "\n";
+                    break;
+                }
+                case 2: {
+                    auto byGenre = getAverageRatingByGenre();
+                    if (byGenre.empty()) {
+                        std::cout << "데이터가 없습니다.\n";
+                        break;
+                    }
+                    std::cout << "\n장르별 평균 평점:\n";
+                    for (const auto& [genre, avg] : byGenre) {
+                        std::cout << "  " << genre << " : " << avg << "\n";
+                    }
+                    std::string popular = getMostPopularGenre();
+                    std::cout << "인기 장르 (장르별 평점 기준): " << popular << "\n";
+                    break;
+                }
+                case 3: {
+                    int n;
+                    std::cout << "상위 몇 개를 볼까요? ";
+                    std::cin >> n;
+                    if (n <= 0) {
+                        std::cout << "1 이상의 값을 입력하세요.\n";
+                        break;
+                    }
+                    // getTopN 재사용: 원본 보호 로직 공유
+                    std::vector<int> topIds = getTopN(n);
+                    std::cout << "\n=== Top " << topIds.size() << " 영화 ===\n";
+                    for (int i = 0; i < (int)topIds.size(); i++) {
+                        const Movie* m = findById(topIds[i]);
+                        std::cout << (i + 1) << "위  " << *m << "\n";
+                    }
+                    break;
+                }
+                case 0:
+                    return;
+                default:
+                    std::cout << "잘못된 선택입니다.\n";
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "오류: " << e.what() << "\n";
+        }
+    }
+}
+
 Movie* MovieManager::findById(int id) {
     for (Movie& m : movies) {
         if (m.getId() == id) return &m;
