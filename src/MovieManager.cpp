@@ -58,7 +58,7 @@ void MovieManager::searchByTitle(const std::string& title) const {
 std::vector<int> MovieManager::getTopN(int n) const {
     if (movies.empty()) return {};
 
-    auto sorted = movies; // 복사 (원본 보호)
+    auto sorted = movies;
     int limit = std::min((int)sorted.size(), n);
 
     std::partial_sort(sorted.begin(), sorted.begin() + limit, sorted.end(),
@@ -71,6 +71,39 @@ std::vector<int> MovieManager::getTopN(int n) const {
         topNIds.push_back(sorted[i].getId());
     }
     return topNIds;
+}
+
+void MovieManager::sortByTitle() {
+    if (movies.empty()) {
+        std::cout << "등록된 영화가 없습니다.\n";
+        return;
+    }
+    std::sort(movies.begin(), movies.end(),
+              [](const Movie& a, const Movie& b) {
+                  return a.getTitle() < b.getTitle();
+              });
+}
+
+void MovieManager::sortByYear() {
+    if (movies.empty()) {
+        std::cout << "등록된 영화가 없습니다.\n";
+        return;
+    }
+    std::sort(movies.begin(), movies.end(),
+              [](const Movie& a, const Movie& b) {
+                  return a.getReleaseYear() > b.getReleaseYear();
+              });
+}
+
+void MovieManager::sortById() {
+    if (movies.empty()) {
+        std::cout << "등록된 영화가 없습니다.\n";
+        return;
+    }
+    std::sort(movies.begin(), movies.end(),
+              [](const Movie& a, const Movie& b) {
+                  return a.getId() < b.getId();
+              });
 }
 
 Movie* MovieManager::findById(int id) {

@@ -15,10 +15,14 @@ public:
 
     void addMovie(const std::string& title, const std::string& genre, int year);
     void printAll() const;
-    void SortByRating();
     void searchByTitle(const std::string& keyword) const;
 
     std::vector<int> getTopN(int n) const;
+
+    void SortByRating();
+    void sortByTitle();
+    void sortByYear();
+    void sortById();
 
     Movie* findById(int id);
     const Movie* findById(int id) const;
