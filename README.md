@@ -1,4 +1,4 @@
-readme_content = """# Movie Recommender (영화 추천 프로그램)
+## Movie Recommender (영화 추천 프로그램)
 
 사용자, 영화, 평점 데이터를 바탕으로 사용자 맞춤형 영화를 추천하는 C++ 기반의 콘솔 애플리케이션입니다. 협업 필터링(Collaborative Filtering) 알고리즘을 사용하여 대상 사용자와 유사한 평가 성향을 가진 다른 사용자들의 데이터를 분석하고, 아직 시청하지 않은 최적의 영화를 추천합니다.
 
